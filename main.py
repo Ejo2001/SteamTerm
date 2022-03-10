@@ -2,6 +2,7 @@ import sqlite3
 import requests
 import os
 
+
 #stream = os.popen(Command)
 #output = stream.read()
 #print(output)
@@ -16,8 +17,7 @@ try:
 except:
     print("Database already exist")
 
-
-
+url = "http://104.248.34.22:8000"
 
 class game():
     def __init__(self):
@@ -56,6 +56,9 @@ while True:
     output = stream.read()
     print(output)
     print("1. List installed games\n2. View game database\n3. Install game\n4. Launch game\n5. Quit")
+    request = requests.get(url)
+    output = request.text
+    print(output)
     answer = input("Please enter a number: ")
     try:
         if int(answer) == 1:
@@ -67,6 +70,10 @@ while True:
         elif int(answer) == 4:
             launch()
         elif int(answer) == 5:
-            exit()
+            break
     except:
         print("Please enter a correct input")
+
+stream = os.popen("clear")
+output = stream.read()
+print(output)
