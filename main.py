@@ -35,6 +35,7 @@ def gamelibrary():
     input("Press enter to continue...")
 
 def launch():
+    stream = os.popen("firefox")
     print("Launch")
     input("Press enter to continue...")
 
