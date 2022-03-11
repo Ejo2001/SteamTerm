@@ -48,17 +48,22 @@ def gamedb():
 
 def updategamedb():
     print("Updating game database")
+    response = requests.get(url)
+    print(response.text)
+    stream = os.popen("apt update")
+    output = stream.read()
+    print(output)
+    input("Press enter to continue...")
+    
 
 
+updategamedb()
 
 while True:
     stream = os.popen("clear")
     output = stream.read()
     print(output)
     print("1. List installed games\n2. View game database\n3. Install game\n4. Launch game\n5. Quit")
-    request = requests.get(url)
-    output = request.text
-    print(output)
     answer = input("Please enter a number: ")
     try:
         if int(answer) == 1:
