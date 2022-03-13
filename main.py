@@ -1,19 +1,20 @@
 import sqlite3
 import requests
 import os
-
+import time
+from termcolor import colored
 
 #stream = os.popen(Command)
 #output = stream.read()
 #print(output)
 
-Conn = sqlite3.connect('GameDatabase.db')
+Conn = sqlite3.connect('gamedatabase.db')
 
 Cursor = Conn.cursor()
 
 try:
-    Cursor.execute('''CREATE TABLE Games
-                                      (appid, name, publisher, launchcmd, filename)''')
+    Cursor.execute('''CREATE TABLE games 
+            (appid, name, publisher, launchcmd, filename)''')
 except:
     print("Database already exist")
 
@@ -36,7 +37,16 @@ def gamelibrary():
 
 def launch():
     stream = os.popen("firefox")
-    print("Launch")
+    launchlist = {}
+    count = 1
+    for g in Cursor.fetchall():
+        stream = os.popen("ls /etc/SteamGames/steamapps")
+        output = stream.read()
+        if output.find(g[4]):
+            launchlist[f"{count}"].append(g[1])
+            count += 1
+    print(launchlist)
+    print("Which game would you like to launch?")
     input("Press enter to continue...")
 
 def install():
@@ -44,23 +54,36 @@ def install():
     input("Press enter to continue...")
 
 def gamedb():
-    print("gamedb")
+    Cursor.execute("SELECT * FROM games")
+    for g in Cursor.fetchall():
+        print(g[1])
     input("Press enter to continue...")
+
 
 def updategamedb():
     print("Updating game database")
     response = requests.get(url)
-    print(response.text)
-    stream = os.popen("apt update")
-    output = stream.read()
-    print(output)
-    input("Press enter to continue...")
+    if int(response.status_code) == 200:
+        Cursor.execute("drop table games")
+        Cursor.execute("CREATE TABLE games (appid, name, publisher, launchcmd, filename)")
+        for i in response.json():
+            Cursor.execute("INSERT INTO games (appid, name, publisher, launchcmd, filename) VALUES (?, ?, ?, ?, ?)", (i["appid"], i["name"], i["publisher"], i["launchcmd"], i["filename"]))
+    else:
+        print("Could not reach database, Error Code " + str(response.status_code))
     
 
+def start():
+    print(colored('STEAMTERM', 'green', attrs=['bold']))
+    time.sleep(2)
+    updategamedb()
 
-updategamedb()
+
+
+
+start()
 
 while True:
+    time.sleep(3)
     stream = os.popen("clear")
     output = stream.read()
     print(output)
