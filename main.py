@@ -27,6 +27,9 @@ class game():
         self.name = "NULL"
         
 def gamelibrary():
+    stream = os.popen("clear")
+    output = stream.read()
+    print(output)
     stream = os.popen("ls /etc/SteamGames/steamapps")
     output = stream.read()
     if output == "":
@@ -36,21 +39,38 @@ def gamelibrary():
     input("Press enter to continue...")
 
 def launch():
-    stream = os.popen("firefox")
+    Cursor.execute("SELECT * FROM games")
     launchlist = {}
     count = 1
     for g in Cursor.fetchall():
         stream = os.popen("ls /etc/SteamGames/steamapps")
         output = stream.read()
-        if output.find(g[4]):
-            launchlist[f"{count}"].append(g[1])
+        if output.find(g[4]) == 0:
+            launchlist[count] = g[1]
             count += 1
-    print(launchlist)
-    print("Which game would you like to launch?")
+    for item in launchlist:
+        print(f"{item} {launchlist.get(item)}")
+    gtl = input("Which game would you like to launch?")
+    command = ("SELECT launchcmd FROM games WHERE name = Counter-Strike: Global Offensive")
+    print(Cursor.execute(command))
+    #Cursor.execute(command)
+    #print(command)
+    #stream = os.popen(command)
+    time.sleep(3)
     input("Press enter to continue...")
 
 def install():
+    Cursor.execute("SELECT * FROM games")
     print("Install")
+    launchlist = {}
+    count = 1
+    for g in Cursor.fetchall():
+        stream = os.popen("ls /etc/SteamGames/steamapps")
+        output = stream.read()
+        print(g[4])
+        if not output.find(g[4]):
+            launchlist[f"{count}"].append(g[1])
+            count += 1
     input("Press enter to continue...")
 
 def gamedb():
@@ -83,7 +103,7 @@ def start():
 start()
 
 while True:
-    time.sleep(3)
+    time.sleep(1)
     stream = os.popen("clear")
     output = stream.read()
     print(output)
