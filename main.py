@@ -104,9 +104,10 @@ start()
 
 while True:
     time.sleep(1)
-    stream = os.popen("clear")
+    stream = os.popen("clear && cat ./logo.txt")
     output = stream.read()
     print(output)
+    print(colored('_'*15, 'red'))
     print("1. List installed games\n2. View game database\n3. Install game\n4. Launch game\n5. Quit")
     answer = input("Please enter a number: ")
     try:
