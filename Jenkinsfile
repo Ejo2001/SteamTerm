@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Test') {
       steps {
-        sh 'apt update'
+        sh 'whoami'
       }
     }
 
