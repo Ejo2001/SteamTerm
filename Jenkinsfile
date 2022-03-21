@@ -7,5 +7,11 @@ pipeline {
       }
     }
 
+    stage('Update') {
+      steps {
+        sh 'apt update'
+      }
+    }
+
   }
 }
